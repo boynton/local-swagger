@@ -23,7 +23,6 @@ func main() {
 	}
 	apiPath := args[1]
 	apiName := filepath.Base(apiPath)
-	apiServer := "http://localhost:8000/"
 	fmt.Println("show swagger-ui for this API:", apiPath, apiName)
 	endpoint := ":8080"
 	path, err := cacheSwaggerDist()
@@ -70,7 +69,6 @@ func main() {
 				data = []byte(strings.Replace(string(data), "https://petstore.swagger.io/v2/swagger.json", apiName, -1))
 			}
 			rc.Close()
-			r.Header.Add("Access-Control-Allow-Origin", apiServer)
 			http.ServeContent(w, r, path, f.Modified, bytes.NewReader(data))
 		} else {
 			fmt.Fprintf(w, "Not Found: %q\n", path)
