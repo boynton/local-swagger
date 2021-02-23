@@ -22,7 +22,7 @@ func main() {
 	}
 	apiPath := args[1]
 	apiName := filepath.Base(apiPath)
-	fmt.Println("show swagger-ui for this API:", apiPath, apiName)
+	fmt.Println("show swagger-ui for:", apiPath, apiName, "at http://localhost:8080/")
 	endpoint := ":8080"
 	path, err := cacheSwaggerDist()
 	if err != nil {
@@ -44,7 +44,6 @@ func main() {
 	files := make(map[string]*zip.File, 0)
 	for _, f := range z.File {
 		if strings.HasPrefix(f.Name, prefix) {
-			fmt.Println("file to serve:", f.Name[prefixLen:])
 			files[f.Name[prefixLen:]] = f
 		}
 	}
@@ -52,12 +51,11 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 		if path == "/" {
-			path = "index.html"
+			path = "/index.html"
 		} else if strings.HasSuffix(path, ".json") {// == "/" + apiName {
          http.ServeFile(w, r, apiPath)
 			return
 		}
-		log.Printf("PATH: %q\n", path)
 		if f, ok := files[path]; ok {
 			rc, err := f.Open()
 			if err != nil {
