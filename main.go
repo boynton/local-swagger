@@ -68,8 +68,8 @@ func main() {
 			rc.Close()
 			http.ServeContent(w, r, path, f.Modified, bytes.NewReader(data))
 		} else {
-			fmt.Fprintf(w, "Not Found: %q\n", path)
 			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintf(w, "Not Found: %q\n", path)
 		}
 	})
 	err = http.ListenAndServe(endpoint, nil)
